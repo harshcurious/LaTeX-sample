@@ -1,0 +1,485 @@
+\documentclass[]{report}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{braket}
+\usepackage{mathrsfs}
+\usepackage{titlesec}
+\usepackage{datetime}
+\usepackage{theoremref}
+\usepackage{hyperref}
+
+
+\DeclareMathOperator{\E}{\text{e}}
+\newcommand{\lp}[2]{\operatorname{L}_{#1}({#2})}
+\newcommand{\lpp}[3]{\operatorname{L}^{#1}(\mathbb{#2}^{#3})}
+\newcommand*\conj[1]{\bar{#1}}
+\newcommand*{\Normb}[2]{\lVert {#1} \rVert_{#2}} 
+\newcommand*{\Normu}[1]{\lVert {#1} \rVert} 
+\newcommand*{\Abs}[1]{\lvert {#1} \rvert}
+\newcommand*{\ext}[1]{\mathbb{E}\big({#1}\big)}
+\renewcommand{\P}[1]{\mathbb{P}\big({#1}\big)}
+\newcommand{\pspc}{\Omega,\mathcal{A},\mathbb{P}}
+\newcommand{\pspca}[2]{\Omega,{#1},\mathbb{#2}}
+\newcommand*{\mart}[1][X]{({#1}_n,\mathcal{F}_n)}
+\newcommand*{\cmart}[1][X]{({#1}_t,\mathcal{F}_t)}
+\newcommand*{\extop}[1]{\mathbb{E}^{{#1}}}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{remark}{Remark}[theorem]
+\newtheorem{Def}[theorem]{Definition}
+
+
+% Title Page
+\title{An Introduction to Banach Space Valued Martigales and One of its Applications}
+\author{Harsh Kumar\\ Supervised by \\ Prof. Sudipta Dutta}
+
+
+\begin{document}
+\maketitle
+
+\newpage
+\tableofcontents
+\newpage
+
+\chapter*{Acknowledgment}%
+\addcontentsline{toc}{chapter}{\numberline{}Acknowledgment}%
+I would like to thank Prof. Sudipta Dutta for firstly agreeing to let me study the following content with him. He has also been immensely supportive and helpful throughout the year, even when I was not doing too well. I really hope he gets well soon. 
+
+I would also like to thank Prof. Parasar Mohanty. He has also helped me a lot throughout the project, initially by siting through my awful presentations and asking just the right questions and then towards the end in the completion of this project in the absence of Prof. Sudipta Dutta.
+
+\chapter*{Introduction}%
+\addcontentsline{toc}{chapter}{\numberline{}Introduction}%
+This is a continuation of the project on martingales I did last semester. In the last project I studied the real valued martingales. That project was structured so that I first studied the basic definition, then the proof of essentially what is often termed as the martingale convergence theorem and finally capped it off by studying an application of the convergence theorem in the form of a proof of the existence of the Brownian motion. This project is structured similarly, first I will first start off by defining what is meant by a '\textbf{Banach valued martingale}' (this itself turns into a slightly tedious task this time around because we need a little more machinery to do it), then I will prove the \textbf{martingale convergence theorem} in this setting (essentially the same proofs as the real valued case) and then move on to an application in the form of some \textit{characterizations} of the \textbf{Radon-Nikod\'{y}m property}. 
+
+The following text assumes familiarity with both the (real valued) martingale theory and functional analysis.
+
+\chapter{Banach-valued Martingale}
+
+As hinted in the introduction, in this chapter we will prove the martingale convergence theorem for Banach space valued martingales. But to do this we will need to define a number of things. Recall that the real-valued martingles were a bunch of random variables (or if you prefer real-valued measurable functions) satisfying the condition that $\ext{X_{n+1}|\sigma(X_1,X_2, \ldots X_n)}=X_n$. So in order to generalize this notion, first of all, we need a concept of measurable function for Banach space valued functions. This will be defined using step function and is actually pretty simple. But then we would also need a concept of conditional expectation for these functions and this is a little more involved, with the use of algebraic tensor products of real valued functions with points in Banach spaces. Meanwhile we will also define a notion of $\operatorname{L}^{p}$ spaces for these functions. This will be required in the statement of martingale convergence theorem.
+
+Remember that all this is a generalization of the theory of real-valued martingales and if we substitute $B$ with the real line $\mathbb{R}$ in the following sections, we get the usual theorems in martingale theory.
+
+\section{Measurable functions, $\operatorname{L}^{p}$ spaces and other usefuls spaces of functions}
+Let $(\pspc)$ be a probability space. Also let $B$ be a Banach space. Consider a function $f: \Omega \rightarrow B$ such that 
+\[ f(\omega) = \sum_{1}^{N} \chi_{A_k}(\omega)b_k \]
+where $A_k \in \mathcal{A}$ and $b_k\in B$. As is conventional, we will call such functions \textbf{step functions}. By definition these are measurable. 
+
+Let us denote the space of all (measurable) step functions by $F(B)$. Equivalently, we can also define $F(B)$ as the set of all measurable functions taking only finitely many values. Now since we know that the point-wise limit of a sequence of measurable functions is measurable, we are motivated to define the following.
+
+\begin{Def}
+	We call a function $f: \Omega \rightarrow B$ \textbf{Bochner measurable} if there exists a sequence $(f_k)$ of step functions converging to $f$ point-wise.
+\end{Def}
+
+For the sake of convenience let us denote the set (of equivalence classes upto equality almost everywhere) of Bochner measurable functions by $\lp{0}{\pspc; B}$. 
+
+Now we can define $\lp{p}{\pspc;B}$ for $1\leq p < \infty$ to be the set of all measurable functions $f$ such that $\int\Normb{f}{B}^p d\mathbb{P} < \infty$ (with equivalence upto equality almost everywhere). Similarly we can define $\lp{\infty}{\pspc;B}$ to the set of functions with ess sup$\Normb{f(\cdot)}{B} < \infty$. When we equip these spaces with the obvious norms, i.e., $\big(\int \Normb{f}{B}^pd\mathbb{P}\big)^{1/p}$ for $p<\infty$ and ess sup$\Normb{f(\cdot)}{B}$ for $p=\infty$, then these spaces are themselves Banach. 
+
+For notational brevity, from now on we will denote the space $\lp{p}{\pspc;B}$ by $\lp{p}{B}$ whenever there is no confusion regarding the base space. Also, let $\operatorname{L}_p$ denote the usual $\operatorname{L}_p$ space, that is the space $\lp{p}{\pspc;\mathbb{R}}$
+
+We now introduce the notion of algebraic tensor product of $\operatorname{L}_p$ spaces with a Banach space $B$. Consider $ \phi_1,\phi_2,\ldots,\phi_N \in \operatorname{L}_p$ and $b_1,b_2,\ldots,b_N \in B$ then we can define a function $f: \Omega \rightarrow B$ such that $f(\omega)=\sum_{1}^{N}\phi_k(\omega)b_k$. We will denote such a function by $\sum_{1}^{N}\phi_k\otimes b_k $ and we will call the space of all functions of this form as $\operatorname{L}_p\otimes B$. Clearly $\operatorname{L}_p\otimes B$ is a subspace of $\lp{p}{B}$. In fact we can say more.
+
+\begin{prop} \label{density}
+	If $1\leq p < \infty$ then
+	\begin{enumerate}
+		\item $F(B) \cap \lp{p}{B}$ is dense in $\lp{p}{B}$.
+		\item $\operatorname{L}_p\otimes B$ is dense in $\lp{p}{B}$.
+	\end{enumerate}
+\end{prop}
+\begin{proof}
+	Let $f \in \lp{p}{B}$. So there exists a sequence $(f_k)$ in $F(B)$ such that $f_k \rightarrow f$ point-wise. We have point-wise convergence but we need to show the convergence in $\lp{p}{B}$. To achieve this we cut off the 'large norm part'. We do this by defining a new sequence $(g_k)$ of functions in $F(B)$. For this, let $E=\set{\omega:\Normb{f_k(\omega)}{B}< 2\Normb{f(\omega)}{B}}$. Since $\Normb{f_k(\cdot)}{B} \rightarrow \Normb{f(\cdot)}{B}$, the set $E$ belongs to $\mathcal{A}$ and so we can define \[g_k(\omega)= f_k(\omega) \chi_E(\omega)\]
+	Clearly, $g_k \rightarrow f$ pointwise. Also 
+	\begin{equation*}
+	\begin{aligned}
+	\sup_{k}\Normb{g_k-f}{B}&\leq \sup_{k}\Normb{g_k}{B}+\Normb{f}{B} \\
+	&\leq 3\Normb{f}{B}
+	\end{aligned}
+	\end{equation*}
+	By dominated convergence theorem it follows that $\int\Normb{g_k-f}{B}^pd\mathbb{P}\rightarrow 0$. Thus we have the required sequence and thus $F(B) \cap \lp{p}{B}$ is dense in $\lp{p}{B}$.
+	
+	Since putting $\phi_k$ in the definition of tensor product as $\chi_{A_k}$, we get that $f(\omega)= \sum_{1}^{N} \chi_{A_k}(\omega)b_k $. Thus $F(B) \cap \lp{p}{B}\subset \operatorname{L}_p\otimes B$ and the first part implies the second part.
+\end{proof}
+
+\section{Defining Conditional Expectation}
+Recall that the usual (real valued) conditional expectation is defined using the Radon-Nikod\'{y}m theorem. As we will soon see, the conditional expectation for Banach-valued martingales is defined by extending the real valued conditional expectation through a tensor product construction. This allows us to nicely sidestep the more difficult problem of generalizing the Radon-Nikod\'{y}m theorem for general Banach spaces. We will come back to this problem in the next chapter. Meanwhile, as a sneak-peek, note that the Radon-Nikod\'ym theorem is not true in general. 
+
+Getting back to business, let us consider a bounded linear operator $T: (\pspc)\rightarrow (\pspca{\mathcal A'}{\mathbb{P}'})$. We can unambiguously define another linear operator $T_0: F(B)\cap \lp{1}{\mathbb{P};B}\rightarrow \lp{1}{\mathbb{P}';B}$ so that for any $f=\sum_{1}^{N}\chi_{A_k}b_k$, 
+\[ T_0(f)=\sum_{1}^{N}T(\chi_{A_k})b_k. \]
+By use of triangle inequality, we can easily see that $\Normb{T_o(f)}{\lp{1}{\mathbb{P}';B}} \leq \Normu{T}\Normb{f}{\lp{1}{\mathbb{P};B}}$. Thus $\Normu{T_0}\leq\Normu{T}$. By a nice density argument (as can be found in \cite{pis}) we can actually extend it the whole of $\lp{1}{\mathbb{P};B}$. We can summarize this in the form of the following proposition. 
+
+\begin{prop}\label{L1op}
+	Given an operator $T: \lp{1}{\pspc} \rightarrow \lp{1}{\Omega,\mathcal{A}, \mathbb{P}'}$, there is a unique bounded operator $\tilde{T}: \lp{1}{\pspc;B} \rightarrow \lp{1}{\Omega,\mathcal{A}, \mathbb{P}';B}$ such that for all $\phi \in \lp{1}{\pspc}$ and for all $b\in B$,
+	\[ \tilde{T}(\phi\otimes b)=T(\phi)b \] and $\Normu{\tilde{T}}=\Normu{T}$.
+\end{prop}
+The proof of this lemma essentially relies on \ref{density}. We define an operator on $F(B)\cap \lp{1}{B}$. Extend it to the whole of $\lp{1}{\pspc;B}$ by density and prove that this construction satisfies the desired conditions. 
+
+This theorem now allows us to extend the conditional expectation as an operator from $ \lp{1}{\pspc} \rightarrow  \lp{1}{\pspc}$ to an operator from $ \lp{1}{\pspc;B}\rightarrow  \lp{1}{\pspc;B}$. But we can now ask: what happens to functions in $ \lp{p}{\pspc;B}$? Do they stay in $ \lp{p}{\pspc;B}$ or is there a function whose conditional expectation is not in $\lp{p}{\pspc;B}$? After all we do know that conditional expectation of functions in $ \lp{p}{\pspc}$ lies in $ \lp{p}{\pspc}$. The answer to this question will also turn out to be important while proving the martingale convergence theorems. 
+
+The answer to the above question is positive. Indeed if we assume $T:\lp{p}{\pspc} \rightarrow \lp{q}{\pspc} $ be a \textbf{positive} linear bounded operator then it can be extended to a unique operator $ \tilde{T}: \lp{p}{\pspc;B} \rightarrow \lp{q}{\pspc;B}$.
+
+\begin{prop}\label{Lpop}
+	Let $T:\lp{p}{\pspc} \rightarrow \lp{q}{\pspc} $ be a \textbf{positive} linear bounded operator and $1\leq p,q \leq \infty$ then it can be extended to a unique operator $ \tilde{T}: \lp{p}{\pspc;B} \rightarrow \lp{q}{\pspc;B}$ such that for all $\phi \in \lp{p}{\pspc}$ and for all $b\in B$ \[ \tilde{T}(\phi\otimes b)=T(\phi)\otimes b \] 
+	and \[ \Normb{\tilde{T}}{\lp{p}{B}\rightarrow \lp{q}{B}}= \Normb{T}{\operatorname{L}_p \rightarrow \operatorname{L}_q} \]
+\end{prop}
+Unlike \ref{L1op} where we extended the operator to $F(B)\cap \lp{1}{B}$, this time we extend it directly to $\operatorname{L}_p \otimes B$ in the following manner. 
+
+Let us define an operator $T\times I_B: \operatorname{L}_p \times B \rightarrow \operatorname{L}_q \times B$ such that \[ T\times I_B\left((\phi,b)\right)=(T(\phi),b). \] Clearly, this is a bilinear form. So, by the definition of tensor product there exists a unique operator $\overline{T\otimes I_B}: \operatorname{L}_p \otimes B \rightarrow \operatorname{L}_q \times B$ such that \[ \overline{T\otimes I_B}\left(\phi\otimes b\right)=(T(\phi),b). \]If we let $i: \operatorname{L}_q \times B \rightarrow \operatorname{L}_q \otimes B$ such that \[ i\left((\phi,b)\right)=\phi\otimes b. \] Now if we define ${T\otimes I_B}: \operatorname{L}_p \otimes B \rightarrow \operatorname{L}_q \otimes B$ to be \[ T\otimes I_B= i \circ (\overline{T\otimes I_B}). \] A density argument gives us the desired operator. We merely need to check that the operator norms are satisfied. Details of this argument can be found in \cite{pis}.
+
+Now recall that the conditional expectation of $f\in\operatorname{L}_1(\pspc)$ with respect to a $\sigma$-algebra $\mathcal{F}$ is defined to be the measurable function (measurable with respect to $\mathcal{F}$) such that
+\[ \int_A f d\mathbb{P}= \int_A\ext{f|\mathcal{F}}d\mathbb{P} \] for all $A\in\mathcal{F}$. Now if we consider this as an operator on $\lp{1}{\pspc}$ then the operator would have the following properties:
+\begin{enumerate}
+	\item It is positive, that is for $f\geq 0$, $\ext{f|\mathcal{F}}\geq0$.
+	\item It is a contraction on $\lp{p}{\pspc}$ for $1\leq p \leq \infty$, that is \[\ext{\cdot|\mathcal{F}}: \lp{p}{\pspc} \rightarrow \lp{p}{\pspc}.\]
+\end{enumerate}
+Thus the operator $\ext{\cdot|\mathcal{F}}$ can be extended to an operator on $\lp{p}{\pspc;B}$. From now on let us denote this extension by $\extop{\mathcal F}(\cdot)$. Now to really be able to call this operator conditional expectation we need the following result.
+
+\begin{prop}\label{cexp}
+	For $f \in \lp{1}{B}$ and $\extop{\mathcal F}$ as defined above, we have \[ \int_A \extop{\mathcal F}fd\mathbb{P}= \int_A f d\mathbb{P} \] for all $A \in \mathcal{F}$.
+\end{prop}
+
+To prove this proposition we will need the following lemma.
+\begin{lemma}\label{scalarization}
+	For $f \in \lp{1}{B}$, $ \int_A \extop{\mathcal F}fd\mathbb{P}= \int_A f d\mathbb{P} $ for all $A \in \mathcal{F}$ if and only if $ \int_A \xi(\extop{\mathcal F}f)d\mathbb{P}= \int_A \xi(f) d\mathbb{P} $ for all $A \in \mathcal{F}$ and for all $\xi \in B^*$.
+\end{lemma}
+\begin{proof}
+	Essentially, we just need to notice that $\int_A\xi(f)d\mathbb{P} = \xi(\int_A fd\mathbb{P})$ for any $f\in\lp{p}{B}$ and for all $\xi\in B^*$. Thus the first part implies the second is obvious. Similarly, if we assume the second side then we have 
+	\[ \xi\left(\int_A\extop{\mathcal F}fd\mathbb{P}\right)=\xi\left(\int_Afd\mathbb{P}\right) \]
+	for all $\xi\in B^*$. Therefore, $\int_A\extop{\mathcal F}f d\mathbb{P}=\int_Afd\mathbb{P}$. Since this argument holds for all $A\in\mathcal{F}$, we are done.
+\end{proof}
+
+Now returning to \ref{cexp}, it is easy to see that $\xi(\extop{\mathcal F}f)=\ext{\xi(f)|\mathcal{F}}$. In fact we can say a lot more. If we let $B'$ be another Banach space and $u : B \rightarrow B'$ be a bounded operator. Then for any $f \in \lp{p}{\pspc;B}$  we have (in the notation of \ref{Lpop})
+\[ \tilde{T}(u(f))= u[\tilde{T}(f)] \]. This can be shown by first proving it for step functions and then using the density argument. 
+
+Now if we put $T=\extop{\mathcal F}(\cdot)$, $B'=\mathbb{C}$ and $u=\xi$, then we get back the result that $\xi(\extop{\mathcal F}(f))=\ext{\xi(f)|\mathcal{F}}$. Now we know that the right hand satisfies the integration condition and so \ref{scalarization} allows us to conclude that \[ \int_A \extop{\mathcal F}fd\mathbb{P}= \int_A f d\mathbb{P} \] for all $A \in \mathcal{F}$.
+
+\section{Here come the Martingales: Definition and Basics}
+The definition of a martingale in this context is almost the same as the usual one.
+\begin{Def}
+	A sequence $(M_N)_{n=0}^{\infty}$ of Bochner measurable Banach valued functions in $\lp{1}{\pspc;B}$ is called a \textbf{martingale} if there exists a sequence $(A_n)_{n=0}^{\infty}$ of $\sigma$-algebras with $\mathcal A_0 \subset \mathcal A_1 \subset \mathcal A_2 \subset \ldots \mathcal{A}$ such that for $n\geq 0$, $M_n$ is $\mathcal{A}_n$-measurable and \[ \mathbb{E}^{\mathcal A_n}(M_{n+1})=M_n \] 
+\end{Def}
+The last condition can be rewritten as \[ \int_A M_n d\mathbb{P}= \int_A M_{n+1} d\mathbb{P} \] for all $A \in \mathcal{A}_n$. Similarly, we can replace the last condition with the condition that for all $n<m$, \[ \mathbb{E}^{\mathcal A_n}(M_{m})=M_n. \] 
+
+Also note that a  sequence $(A_n)_{n=0}^{\infty}$ of $\sigma$-algebras with $\mathcal A_0 \subset \mathcal A_1 \subset \mathcal A_2 \subset \ldots \subset \mathcal{A}$ is termed as a filtration. And the martingale $(M_N)_{n=0}^{\infty}$ is said to be adapted to the filtration if $M_n$ is $\mathcal{A}_n$-measurable.
+
+Notice also that in the definition of martingale, we could just assume that the filtration $(A_n)_{n=0}^{\infty}$ was such that $\mathcal{A}_n = \sigma(M_0,M_1,M_2,\ldots,M_n)$. In fact this is the minimal such choice.
+
+We can similarly define a Banach valued submartingale.
+\begin{Def}
+	A sequence $(M_N)_{n=0}^{\infty}$ of Bochner measurable Banach valued functions in $\lp{1}{\pspc;B}$ is called a \textbf{submartingale} if there exists a sequence $(A_n)_{n=0}^{\infty}$ of $\sigma$-algebras with $\mathcal A_0 \subset \mathcal A_1 \subset \mathcal A_2 \subset \ldots \mathcal{A}$ such that for $n\geq 0$, $M_n$ is $\mathcal{A}_n$-measurable and \[ M_n \leq \mathbb{E}^{\mathcal A_n}(M_{n+1}) \] 
+\end{Def}
+
+\begin{prop}
+	Let $(M_N)_{n=0}^{\infty}$ be a $B$-valued martingale in $\lp{\infty}{B}$ and $\phi: B \rightarrow B$ be a convex (continuous) function which is bounded on bounded sets. Then the sequence $f(M_n)$ is a submartingale.
+\end{prop}
+\begin{proof}{(sketch)}
+	Use the following two facts 
+	\begin{itemize}
+		\item $\phi(x)=\sup_f f(x)$ where the sup is taken over the collection of all continuous affine functions $f$ on $B$ such that $f\leq \phi$. (This can be verified using Hahn Banach theorem.)
+		\item If $f$ is an affine function and $(M_n)$ is martingale, then $f(M_n)$ is also a martingale.
+	\end{itemize}
+	Now, it is an easy exercise to use these two fact to prove the proposition.
+\end{proof}
+
+\begin{theorem} \label{lplimit}
+	Assume $(\mathcal{A}_n)$ to be a filtration of $\mathcal{A}$ and $\mathcal{A}_{\infty}=\sigma\left(\bigcup\mathcal{A}_n\right)$. Also let $1\leq p < \infty$ and $M \in \lp{p}{\pspc;B}$. If we define \[M_n := \extop{\mathcal{A}_n}M, \] then $(M_n)$ is a martingale such that $M_n \rightarrow \extop{\mathcal{A}_{\infty}}M$ in $\lp{p}{\pspc ;B}$.
+\end{theorem}
+
+To prove this we need the following lemma
+\begin{lemma}\label{sigmaapprox}
+	Let $(\mathcal{A}_n)$ be a sequence of $\sigma$-algebras in $\mathcal{A}$ with $\mathcal{A}_{\infty}= \sigma\left( \bigcup_{n=0}^{\infty}\mathcal{A}_n \right)$, then $\bigcup_{n=0}^{\infty}\lp{p}{\pspca{\mathcal{A}_n}{P};B}$ is dense in $\lp{p}{\pspca{\mathcal{A}_{\infty}}{P};B}$
+\end{lemma}
+Notice that we don't actually require $(\mathcal{A}_n)$ to be a filtration here. 
+\begin{proof}
+	Let $\mathcal{C}$ be the class of all sets $A \in \mathcal{A}$ such that $\chi_A \in \overline{\bigcup_{n=0}^{\infty} \lp{\infty}{\pspca{\mathcal{A}_n}{P};B} }$ where the closure is over $\lp{p}{\pspca{\mathcal{A_{\infty}}}{P};B}$ norm. Since if $A \in \mathcal{A}_n$ then $\chi_A \in \lp{\infty}{\pspca{\mathcal{A}_n}{P};B}$ so $\cup \mathcal{A}_n \subseteq \mathcal{C}$. Using the diagonal argument one can verify that $\mathcal{C}$ is actually a $\sigma$-algebra. Therefore, $\mathcal{A}_{\infty} \subseteq \mathcal{C}$. So we have that the set of all characteristic functions $\chi_A$ (where $A \in \mathcal{C}$) is dense in $\lp{p}{\pspca{\mathcal{A}_{\infty}}{P};B}$. In other words $\bigcup_{n=0}^{\infty}\lp{\infty}{\pspca{\mathcal{A}_n}{P};B}$ is dense in $\lp{p}{\pspca{\mathcal{A}_{\infty}}{P};B}$. Now since $\lp{\infty}{\pspca{\mathcal{A}_n}{P};B} \subset \lp{p}{\pspca{\mathcal{A}_n}{P};B}$, we are actually done.
+\end{proof}
+ Now we return to the proof of \ref{lplimit}.
+ \begin{proof}
+ 	Let $m>n$ then since $\mathcal{A}_n \subseteq \mathcal{A}_m$ we have \[ \extop{\mathcal{A}_n}\extop{\mathcal{A}_m}=\extop{\mathcal{A}_n}. \]
+ 	Similarly, we also have \[ \extop{\mathcal{A}_n}\extop{\mathcal{A}_{\infty}}=\extop{\mathcal{A}_n}. \]
+ 	Without loss of generality we may assume that $M$ is $\mathcal{A}_{\infty}$-measurable (as we can just replace $M$ by $\extop{\mathcal{A_{\infty}}}(M)$ if necessary). Let $\epsilon>0$, then by \ref{sigmaapprox}, there exists a integer $k$ and a function $g \in \lp{p}{\pspca{\mathcal{A}_k}{P};B}$ such that \[ \Normb{M-g}{p}<\epsilon. \]Clearly, $g=\extop{\mathcal{A}_n}g$ for all $n \geq k$. Thus for large enough $n$, \[ M_n-M= \extop{\mathcal{A}_n}(M-g)+g-M \]
+ 	and so 
+ 	\[
+ 	\begin{aligned}
+ 	\Normb{M_n-M}{p} &= \Normb{\extop{\mathcal{A}_n}(M-g)+g-M }{p}\\
+ 	&\leq \Normb{\extop{\mathcal{A}_n}(M-g) }{p} + \Normb{g-M }{p}\\
+ 	&\leq \Normb{M-g }{p} + \Normb{g-M }{p}\\
+ 	&\leq 2\epsilon
+ 	\end{aligned}
+ 	\]
+ 	Thus $M_n \rightarrow \extop{\mathcal{A}_{\infty}}M$ in $\lp{p}{\pspc ;B}$.
+ \end{proof}
+
+Now that we know that the convergence holds in $\operatorname{L}_p$ norm, we could ask whether the convergence is also pointwise almost everywhere. Indeed this is nothing but the martingale convergence theorem, our topic for the next section.
+
+\section{But where do the Martingales go? The Martingale Convergence Theorems}
+
+In this section we will be focusing on almost everywhere convergence of martingales in $\lp{p}{B}$ where $1\leq p \leq \infty$. The proofs are based on a general principle which can be traced all the way back to Banach himself. This general principle allows us to deduce almost sure convergence results from suitable maximal inequalities. 
+
+So we need to first prove the required maximal inequalities. These are nothing but Banach valued versions of Doob's maximal inequalities. 
+
+The proofs in this section are mere repetition of proofs of similar results in the real valued case and so we will sometimes skip them.
+
+We start at the beginning with the definition of stopping time.
+\begin{Def}
+	Given an increasing sequence $(\mathcal{A}_n)_{n\geq0}$ of sub $\sigma$-algebras on $\Omega$, a radom variable $T: \Omega \rightarrow \mathcal{N}\cup \{\infty\}$ is called a \textbf{stopping time} if for all $n\geq0$,
+	\[ \set{\omega \in \Omega: T(\omega)\leq n } \in \mathcal{A}_n. \]Additionally if $T<\infty$, then $T$ is a finite stopping time.
+\end{Def}
+One could also equivalently define stopping time as the appropriate random variable with \[ \set{\omega \in \Omega: T(\omega)= n } \in \mathcal{A}_n. \]
+
+The following propositions are fairly important results.
+\begin{prop}
+	For any martingale $(M_n)$ relative to $(\mathcal{A}_n)$ and for any stopping time $T$ with respect to $(\mathcal{A}_n)$, let us denote by $M_{n\wedge T}$ the function $M_{n\wedge T(\omega)}(\omega)$. Then not only are $(M_{n\wedge T})_{n\geq 0}$ random variables  (or measurable), but this sequence forms a martingale relative to $(\mathcal{A}_n)_{n\geq 0}$.
+\end{prop}
+\begin{proof}
+	It is actually easy to see that $M_{n\wedge T} \in \lp{1}{B}$, by using the fact that $M_n \in \operatorname{L}_1$. Moreover notice that \[ M_{n\wedge T}-M_{(n-1)\wedge T}= \chi_{\{n\leq T\}}(M_n-M_{n-1}) \]
+	and $\set{n\leq T}^c=\set{T<n} \in \mathcal{A}_{n-1}$. So
+	\[ \extop{\mathcal{A}_{n-1}}(M_{n\wedge T}-M_{(n-1)\wedge T}) = \chi_{\{n\leq T\}}\extop{\mathcal{A}_{n-1}}(M_n-M_{n-1})=0. \]
+	Thus $\extop{\mathcal{A}_{n-1}}(M_{n\wedge T})= M_{(n-1)\wedge T}$ and we are done.
+\end{proof}
+
+Now given a stopping time $T$, we can define a $\sigma$-algebra $\mathcal{A}_T$ such that 
+\[ \mathcal{A}_T := \set{A\in \mathcal{A} : A \cap\{T\leq n\}\in \mathcal{A}_n \text{ for all }n\geq 0 } \]
+
+It is fairly easy to see that 
+\begin{lemma}
+	A function defined on $\Omega$ is $\mathcal{A}_T$-measurable if and only if its restriction to each set $\set{T=k}$ with $1\leq k \leq \infty$ is $\mathcal{A}_k$-measurable. Also, if $S$ and $T$ are stopping times, then $T\wedge S$ and $T\vee S$ are stopping times too.
+\end{lemma}
+
+\begin{prop}
+	\begin{enumerate}
+		\item Consider $M_{\infty} \in \lp{1}{\pspc;B}$ and let $M_n=\extop{\mathcal{A}_n}M_{\infty}$ be the associated martingale. If $T$ is a stopping time and we define $M_T$ to be a random variable such that $M_T = \extop{\mathcal{A}_T}(M_{\infty})$ then $M_T \in \lp{1}{\pspc;B}$ and \[ \extop{\mathcal{A}_n}(M_T)= M_{T\wedge n}= \extop{\mathcal{A}_T}(M_n) \]
+		If $S$ is another  stopping time then 
+		 \[ \extop{\mathcal{A}_S}(M_T)= M_{T\wedge S}= \extop{\mathcal{A}_T}(M_S) \]
+		 \item If $(M_n)_{n\geq 0}$ is a martingale in $\lp{1}{\pspc;B}$ and if $T_0\leq T_1 \leq T_2 \leq \cdots$ is a sequence of \textit{bounded} stopping times then $(M_{T_k}T)_{k\geq 0}$ is a martingale relative to the sequence of $\sigma$-algebras $\mathcal{A}_{T_0} \subset \mathcal{A}_{T_1} \subset \cdots$. This also holds for unbounded times if we assume as in first part that $(M_n)_{n\geq 0}$ converges in $\lp{1}{\pspc;B}$.
+	\end{enumerate}
+\end{prop}
+The proofs of these results can be found in \cite{pis}. We instead move on to the idea of maximal inequalities. We start by recalling the real valued Doob's maximal inequalities.
+\begin{theorem}[Doob's Maximal Inequalities]
+	Let $(M_0,M_1,\ldots,M_n)$ be a submartingale in $\operatorname{L}_1$ and let $M_n^*=\sup_{k\leq n}M_k$. Then for all $t>0$,
+	\[ t\P{\{M_n^* >t\}} \leq \int_{\{M_n^*>t\}}M_nd\mathbb{P} \]
+	and if $M_n^*\geq 0$, then for all $1 < p <\infty$ we have 
+	\[ \Normb{M_n^*}{p} \leq p'\Normb{M_n}{p} \] where $\frac{1}{p}+\frac{1}{p'}=1$.
+\end{theorem}
+
+Let $(M_n)_{n\geq 0}$ be a $B$-valued martingale. If we define (real) random variables $(Z_n)_{n\geq0}$ such that $Z_n(\omega)=\Normb{M_n(\omega)}{B}$ form a submartingale. To check this recall that for any positive operator (in the language of \ref{Lpop}), $ \Normu{\tilde{T}(f)} \leq T(\Normb{f}{B})$ almost surely. Thus,
+\[ \Normu{\extop{\mathcal{A}_k}(f)} \leq \ext{\Normb{f}{B}|\mathcal{A}_k} \text{ a.e.} \]
+Now if we put $f=M_n$ where $k\leq n$, we get
+\[ \Normu{M_k} \leq \ext{\Normb{M_n}{B}|\mathcal{A}_k}. \] 
+Now applying Doob's martingale theorem to the submartingale $(Z_n)$, we get 
+
+\begin{lemma} \label{doobB}
+	Let $(M_n)$ be a martingale with values in an arbitrary Banach space $B$. Then \[ \sup_{t>0}t\P{\{\sup_{n\geq0}\Normu{M_n} >t\}} \leq \sup_{n\geq0}\Normb{M_n}{\lp{1}{B}} \]
+	and for all $1 < p <\infty$ we have 
+	\[ \Normb{\sup_{n\geq0}\Normu{M_n}}{p} \leq p'\sup_{n\geq0}\Normb{M_n}{\lp{p}{B}} \] where $\frac{1}{p}+\frac{1}{p'}=1$.
+\end{lemma}
+
+Using this lemma we will now prove the martingale convergence theorem.
+
+\begin{theorem}\label{MCT}
+	Let $1\leq p < \infty$ and $B$ be a Banach space. Consider $f \in \lp{p}{\pspc;B}$ and let $M_n=\extop{\mathcal{A}_n}(f)$ be the associated martingale. Then $M_n$ converges to $\extop{\mathcal{A}_{\infty}}(F)$ a.s. Therefore, if a martingale $(M_n)$ is convergent in $\lp{p}{\pspc;B}$ to a limit $M_{\infty}$, then it necessarily converges a.s. to this limit, and we have $M_n=\extop{\mathcal{A}_n}M_{\infty}$ for all $n \geq 0$.
+\end{theorem}
+\begin{proof}
+	By \ref{lplimit}, we know that $\extop{\mathcal{A}_n}(f)$ converges in $\lp{p}{B}$ to $M_{\infty} = \extop{\mathcal{A}_{\infty}}(f)$. Take $\epsilon>0$ and choose $k$ so that $\sup_{n\geq k}\Normb{M_n-M_k}{\lp{p}{B}}< \epsilon$. Define $M_n'=M_n-M_k$ if $n\geq k$ and $M_n'=0$ if $n\leq k$. For $1<p<\infty$ we have 
+	\[ \Normb{\sup_{n\geq0}\Normu{M_n-M_k}}{p} \leq p'\epsilon \]
+	and for $p=1$ \[ \sup_{t>0}t\P{\{\sup_{n\geq0}\Normu{M_n-M_k} >t\}} \leq \epsilon .\]
+	Therefore, if we define pointwise 
+	\[ l= \lim\limits_{K\rightarrow \infty}\sup\limits_{n,m\geq k}\Normu{M_n-M_m} \] 
+	then we actually have 
+	\[ \begin{aligned}
+		l&= \inf\limits_{k\geq 0}\sup\limits_{n,m\geq k}\Normu{M_n-M_m}\\
+		&\leq 2 \sup\limits_{n\geq k}\Normu{M_n-M_k}
+	\end{aligned} \]
+	So, $\Normb{l}{p}\leq 2p'\epsilon$ and we get
+	\[ \sup\limits_{t\geq 0} t \P{l>2t}\leq \epsilon \]
+	Now since $\epsilon$ is arbitrary we get that $l=0$ a.s., and hence by the Cauchy criterion, $(M_n)$ converges a.s. Since we already know that $M_n \rightarrow M_{\infty}$ in $\lp{p}{B}$, so $(M_n)$ must converges a.s to $M_{\infty}$ too. Now recall that $\extop{\mathcal{A}_n}M_m=M_n$ for all $m\geq n$. On taking the limit $n\rightarrow \infty$ we get that $\extop{\mathcal{A}_n}M_m \rightarrow \extop{\mathcal{A}_n}M_{\infty}$ in $\lp{p}{B}$, giving us that $M_n=\extop{\mathcal{A}_n}M_{\infty}$. 
+\end{proof}
+
+\begin{Def}
+	A sequence $(M_n)$ in $\lp{1}{\pspc;B}$ is said to be uniformly integrable if the real valued sequence $(\Normu{M_n(\cdot)})$ is uniformly integrable or in other words, $(\Normu{M_n(\cdot)})$ is bounded in $\operatorname{L}_1$ and that for any $\epsilon>0$ there is a $\delta>0$ such that for all $A \in \mathcal{A}$, whenever $\P{A}< \delta$ 
+	\[ \sup\limits_{n\geq 0} \int_A \Normu{M_n} < \epsilon. \]
+\end{Def}
+
+The following lemma shows how to use stopping time to "truncate" a martingale. 
+
+\begin{lemma}
+	Let $(M_n)$ be a martingale bounded in $\lp{1}{\pspc;B}$ where $B$ is an arbitrary Banach space. Fix $t > 0$ and take 
+	\[ T= \begin{cases}
+		\inf\set{n\geq 0: \Normu{M_n}>t} \quad &\text{if }\sup\Normu{M_n}>t\\
+		&\text{otherwise}
+	\end{cases} \] 
+	Then 
+	\[ \ext{\Normu{M_T}\chi_{\{T<\infty\}}}\leq \sup\limits_{n\geq0}\ext{\Normu{M_n}} \]
+	qnd the martingale $(M_{n\wedge T})_{n\geq0}$ is uniformly integrable. 
+\end{lemma}
+\begin{proof}
+	Since $(\Normu{M_n})$ is a submartingale and $\set{T=k}\in \mathcal{A}_k $, we get 
+	\[ \ext{\Normu{M_k}\chi_{\{T=k\}}} \leq \ext{\Normu{M_n}\chi_{\{T=k\}}} \]
+	Summing upto $k\leq n$ and taking the supremum over $n\geq 0$ we get 
+	\[ \ext{\Normu{M_T}\chi_{\{T<\infty\}}}\leq \sup\limits_{n\geq0}\ext{\Normu{M_n}} \]
+	By definition of $T$, whenever $\set{T=\infty}$, $\sup \Normu{M_n}\leq t$. In fact $\sup_{n<T}\Normu{M_n}\leq t$, so that 
+	\[
+	\begin{aligned}
+		\sup_n \Normu{M_{n\wedge T}} & \leq \max{\chi_{\{T<\infty\}}\Normu{M_T},t}\\
+		& \leq \chi_{\{T<\infty\}}\Normu{M_T}+t.
+	\end{aligned}
+	\]
+	Then for any $A \in \mathcal{A}$, 
+	\[ \sup_n \ext{\chi_A\Normu{M_{n\wedge T}}} \leq \ext{\chi_A Z} \]
+	where $Z=\chi_{\{T<\infty\}}\Normu{M_T}+t$. Since $Z$ is uniformly integrable, $(\Normu{M_{n\wedge T}})_{n\geq0}$ is uniformly integrable.
+\end{proof}
+
+\begin{prop}\label{uniform}
+	Let $(\mathcal{A}_n)$ be an increasing sequence of $\sigma$-subalgebra of $\mathcal{A}$. The following are equivalent:
+	\begin{enumerate}
+		\item Every $B$-valued martingale adapted to $(\mathcal{A}_n)$ and bounded in $\lp{1}{\pspc;B}$ is a.s. convergent.
+		\item Every $B$-valued uniformly integrable martingale adapted to $(\mathcal{A}_n)$  is a.s. convergent.
+	\end{enumerate}
+\end{prop}
+\begin{proof}
+	1. $\implies$ 2. is obvious.\\
+	So assume that 2. holds and let $(M_n)$ be a martingale bounded in $\lp{1}{B}$. Fix $t>0$ and consider $(M_{n\wedge T})$. By the previous lemma this is a uniformly integrable martingale and so it converges a.s. by our assumption. So if $\set{T(\omega)=\infty}$ then $(M_n(\omega))$ is a.s. convergent. Now by Doob's inequalities we already know that 
+	\[ \P{T< \infty}=\P{\sup \Normu{M_n}>t}\leq \frac{C}{t} \] where $C=\sup \ext{\Normu{M_n}}$. By choosing $t$ large enough, the right hand side can be made arbitrarily small. Thus the martingale $(M_n)$ converges a.s.
+\end{proof}
+
+We can use this to prove that 
+\begin{theorem}
+	Every $\operatorname{L}_1$-bounded scalar valued martingale converges a.s.
+\end{theorem}
+
+We can actually extend the martingale convergence theorem to submartingales.
+
+\begin{theorem}\label{sub}
+	Every submartingale $(M_n)$ bounded in $\operatorname{L}_1$ (resp. and uniformly integrable) converges a.s. (resp. and in $\operatorname{L}_1$.)
+\end{theorem}
+We prove this theorem by decomposing our submartingale $(M_n)$ into a sum of a martingale $\tilde{M}_n$ and a predictable increasing sequence $(Z_n)$. The sequence $(Z_n)$ can be shown to be convergent a.s. by monotone convergence theorem and so $\tilde{M}_n$ converges a.s. by our previous theorem. And so their sum converges a.s. The details can be found in \cite{pis}
+
+
+
+\chapter{The Application}
+
+In the introduction we promised to provide an application of the martingale convergence theorem, and while defining the conditional expectation we also claimed to return to the issue of generalizing the Radon-Nikod\'ym theorem. In this chapter we will combine these two aims and talk about what is often called the Radon-Nokod\'ym property. 
+
+The Radon Nikod\'ym theorem can be stated as follows
+\begin{theorem}\label{RN}
+	Let $(\pspc)$ be a probability space and let $\nu$ be an absolutely continuous measure with respect to $\mu$ ($\nu(A)=0$ whenever $\mu(A)=0$). Then there exists a unique function $f \in \lp{1}{\pspc}$ such that 
+	\[ \nu(A)= \int_{A}f d\mu \] for all $A \in \mathcal{A}$. 
+\end{theorem}
+
+Now if we wanted to extend this to Banach valued functions/measures then the above equality should look like
+\[ \nu(A)= \int_{A}f d\mu \] for all $A \in \mathcal{A}$ and where $f \in \lp{1}{B}$. Since the right hand side is Banach valued, so must be the left hand side. Hence we need the concept of absolutely continuous Banach valued functions. This where we will start in the first section. In the following section we will prove when the above equality holds and examples where it doesn't.
+\section{Vector-valued measures}
+\begin{Def}
+	A map $\nu : \mathcal{A}\rightarrow B$ is a vector valued measure if $\nu(\phi)=0$ and $\nu$ is $\sigma$-finite, that is,
+	\[ \nu\left(\bigcup_{i=1}^{\infty} A_i \right)= \sum_{i=1}^{\infty}\nu(A_i) \] whenever $(A_i)_{i\geq 0}$ are mutually disjoint sets in $\mathcal{A}$.
+\end{Def}
+
+\begin{Def}
+	The variation $\Abs{\nu}$ of $\nu$ is the $\sigma$-additive (real) nonnegative measure on $(\Omega,\mathcal{A})$ such that for all $A \in \mathcal{A}$
+	\[ \Abs{\nu}(A)= \sup \{\sum \Normu{\nu(A_j)}\} \] where the supremum is taken over all finite partitions of $A$ with $A_j \in \mathcal{A}$
+\end{Def}
+
+We shall mainly be interested in measures of finite variation, that is, measures $\nu$ for which $\Abs{\nu}(\Omega)< \infty$. $\Abs{\nu}(\Omega)$ is often denoted simply by $\Normu{\nu}$. With this norm, the set of all bounded Banach valued measures form a Banach space. 
+
+Let us denote the set of all bounded complex valued measures on $(\Omega,\mathcal{A})$ by $M(\Omega,\mathcal{A})$, the set of all positive bounded measures by $M_+(\Omega,\mathcal{A})$ and the set of all vector measures by $M(\Omega,\mathcal{A};B)$.
+
+\begin{Def}
+	A $B$-valued measure $\nu$ is said to be absolutely continuous with respect to a positive measure $\mu \in M_+(\Omega,\mathcal{A})$ (denoted $\nu \ll \mu$) if one of the following equivalent conditions holds,
+	\begin{enumerate}
+		\item $\Abs{\nu}$ is absolutely continuous with respect to $\mu$ ( $\Abs{\nu} \ll \mu$ )
+		\item $\mu(A)=0 \implies \nu(A)=0$.
+		\item For every $\epsilon>0$ there is a $\delta>0$ so that $\mu(A)<\delta$ implies that $\Abs{\nu}(A)<\epsilon$. 
+	\end{enumerate}
+\end{Def}
+Obviously $\nu \ll \Abs{\nu}$.
+
+
+Let $\nu$ be a vector measure with finite variation. The integral of a step function $g= \sum_{i=1}^{m}a_i\chi_{A_i}$ in $\lp{1}{\Abs{\nu}}$ is defined by \[ \int g d\nu= \sum a_i\chi_{A_i} \]
+Now by density argument we can extend this to the whole of $\lp{1}{\Abs{\nu}}$. It is easy to check that \[ \Normu{\int_{\Omega}g d\nu} \leq \int_{\Omega}|g| d|\nu| . \]
+
+One can also define integration of a Banach space valued function $f$ in $\lp{1}{\pspc;B}$ with respect to a real/complex valued measure $\mu$ in a similar manner by first defining it for step functions and then extending it to the whole space. Here too we have \[ \Normu{\int_{\Omega}f d\mu} \leq \int_{\Omega}\Normu{f} d\mu . \]
+
+\section{Radon-Nikod\'ym Property and its Characterization}
+\begin{Def}
+	A Banach space $B$ is said to have the \textbf{Radon Nikod\'ym property }(RNP) if for every measure space $(\Omega,\mathcal{A})$, for every finite positive measure $\mu$ on $(\Omega,\mathcal{A})$ and for every $B$-valued measure $\nu$ in $M(\Omega,\mathcal{A};B)$ such that $\nu$ is absolutely continuous with $\mu$, there is a function $f \in \lp{1}{\pspc;B}$such that $\nu=f.\mu$, or in other words 
+	\[ \nu(A)=\int_{A}fd\mu \] for all $A \in \mathcal{A}$.
+\end{Def}
+
+As we have already stated that not every Banach space has RNP (we will provide a few counterexamples soon), we need some simpler way to check whether a given Banach space has RNP. Although there are numerous characterizations of RNP, a lot of them relating to the \textit{geometry of the Banach space}, we will focus our attentions on the following two.
+
+\begin{theorem}\label{RNP1}
+	Fix $1<p \leq \infty$. The following properties of a BAnach space $B$ are equivalent
+	\begin{enumerate}
+		\item $B$ has RNP.
+		\item  Every uniformly integrable martingale in $\operatorname{L}_1(B)$ converges a.s. and in $\lp{1}{B}$.
+		\item Every bounded martingale in $\operatorname{L}_1(B)$ converges a.s..
+		\item Every bounded martingale in $\operatorname{L}_p(B)$ converges a.s. and in $\lp{p}{B}$.
+	\end{enumerate}
+\end{theorem}
+\begin{theorem}\label{RNP2}
+	A dual space $B^*$ has the RNP if and only if for any countably generated measure space and any $1\leq p < \infty$ we have (isometrically)
+	\[ \lp{p}{\pspc;B}^*= \lp{p'}{\pspc;B^*} \]	
+\end{theorem}
+
+\begin{proof}(Theorem \ref{RNP1})
+	We first prove that $1. \implies 2.$. So assume that $B$ has RNP. Now, let $(\pspc)$ be a probability space and let $(\mathcal{A}_n)$ be an increasing sequence of sub $\sigma$-algebras. Without loss of generality we assume that $\mathcal{A}_{\infty}=\mathcal{A}$. Let $(M_n)$ be a $B$-valued uniformly integrable martingale adapted to $(\mathcal{A}_n)$. To this we associate vector measure $\nu$ so that for any $A\in \mathcal{A}$, 
+	\[ \nu(A)= \lim\limits_{n\rightarrow \infty}\int_{A}M_nd\mathbb{P}. \]
+	To see that this indeed defines a vector measure, note that if $A\in \mathbb{A}_k$ and $n\geq k$, then $\int_A M_nd\mathbb{P}=\int_A M_k d\mathbb{P}$. So the limit is stationary and so well defined. This also allows us to say that the limit is well defined for all $A \in \bigcup_{n\geq 0}\mathcal{A}_n$. Since $(M_n)$ is uniformly integrable, for all $\epsilon>0$ there exists a $\delta>0$ so that whenever $\P{A}<\delta$, $\Normu{\nu(A)}<\epsilon$. Thus $\nu$ extends to a vector measure on $\mathcal{A}$. This is because $\ext{M_n\chi_A}=\ext{M_n\extop{\mathcal{A}_n}(\chi_A)}$ and the the RHS in the above equation is nothing but $\lim\limits_{\ext{M_n\extop{\mathcal{A}_n}(\chi_A)}}$. To see that this makes sense note that if $\phi_n=\extop{\mathcal{A}_n}(\chi_A)$, then for all $n<m$, \[ \ext{M_n\phi_n}-\ext{M_m\phi_m}= \ext{M_m(\phi_n-\phi_m)} \]
+	but by uniform integrability (and since $|\phi_n-\phi_m|<2$) we have that $\Normu{\ext{M_m(\phi_n-\phi_m)}}\rightarrow 0$ whenever $n,m\rightarrow \infty$. So, for any $t>0$ we have 
+	\[ \Normu{\ext{M_m(\phi_n-\phi_m)}} \leq 2 \sup_m \int_{\Normu{M_m}>t}\Normu{M_m}+t \ext{|\phi_n-\phi_m|}, \] which in turn gives us that \[ \lim\limits_{n,m\rightarrow\infty}\Normu{\ext{M_m(\phi_n-\phi_m)}} \leq 2 \sup_m \int_{\Normu{M_m}>t}\Normu{M_m} \]But the right hand side here can be made as small as we like by uniform integrability. So, $ \lim\limits_{n,m\rightarrow\infty}\Normu{\ext{M_m(\phi_n-\phi_m)}}\rightarrow 0$. Hence $\nu$ is well defined by Cuchy criterion. 
+	
+	By Theorem \ref{sub}, the submartingale $(\Normu{M_n})$ converges in $\operatorname{L}_1$ to a limit say $f$ in $\operatorname{L}_1$. Note that for all $a\in \mathcal{A}$,
+	\[ \nu(A)\leq \int_{A}wd\mathbb{P}. \]
+	To show this note that \[ \Normu{\nu(A)} \leq \lim\limits_{n\rightarrow\infty}\ext{\Normu{M_n}\chi_A}=\int_A wd\mathbb{P}. \]
+	and so if $A_1,A_2, \ldots,A_m$ is a disjoint partition of $A$, then \[ \Normu{\nu(A)} \leq \sum_{1}^{m}\int_{A_j} wd\mathbb{P}= \int_A wd\mathbb{P} . \]
+	So by taking the supremum over all such partitions we obtain that \[ \nu(A)\leq \int_{A}wd\mathbb{P} \] as claimed. Thus $\nu \ll \mathbb{P}$. Furthermore, by our assumption 1., we obtain a function $f\in \lp{1}{\pspc;B}$ such that $\nu(A)=\int_Afd\mathbb{P}$. 
+	
+	Remember that for any $k>0$ and any $A_k\in \mathcal{A}_K$, $\ext{M_n\chi_A}=\ext{M_k\chi_A}$. But by definition of $\nu$ for all $A \in \mathcal{A_k}$, $\nu(A)=\ext{M_k\chi_A}$. So for all $k>0$ and $A\in \mathcal{A}_k$,
+	\[ \int_Afd\mathbb{P}= \int_A M_kd\mathbb{P}. \]
+	Thus $\extop{\mathcal{A}}(f)=M_k$. Thus by theorems \ref{lplimit} and \ref{MCT}, we get that $(M_n)$ converges a.s. and in $\lp{1}{B}$ to $f$. 
+	
+	$2.\implies3.$ is obvious from Proposition \ref{uniform}.
+	
+	$3.\implies 4.$ is again obvious since $\lp{p}{B}\subseteq \lp{1}{B}$ and Theorem \ref{lplimit}.
+	
+	$4. \implies 1.$ Assume $4.$ and let $\nu$ be a vector measure such that $\nu \ll \mu$ where $\mu$ is a finite positive measure. The by Radon-Nikod\'ym theorem (\ref{RN}), there is a function $w \in \lp{1}{\mu}$ such that $|\nu|=w.\mu$. Thus it is enough to show that $\nu$ has RNP with respect to $|\nu|$. In fact by replacing $\mu$ with $|\nu|$ and then normalizing we might as well assume the measure is a probability measure $\mathbb{P}$. So we have that for all $A\in \mathcal{A}$, \[ \Normu{\nu(A)}\leq \mathbb{P}(A) \]
+	Then for any finite $\sigma$-subalgebra $\mathcal{B}\subset \mathcal{A}$ generated by a finite partition $A_1, \ldots, A_N$ of $\Omega$, we consider the $\mathcal{B}$-measurable (step) functions $f_{\mathcal{B}}:\Omega \rightarrow B$ such that $f_{\mathcal{B}}=\nu(A_j)\mathbb{P}(A_j)^{-1}$ on each atom $A_j$ of $\mathcal{B}$. We can check that $\{f_{\mathcal{B}}: \mathcal{B}\subset \mathcal{A}, |\mathcal{B}|<\infty\}$ is a martingale indexed by the the directed set of all such $\mathcal{B}$'s. By theorem \ref{lplimit}, the net converges in $\lp{1}{B}$ to a function $f \in \lp{1}{B}$. Now by continuity of $\extop{\mathcal{C}}$ for each finite $\mathcal{C}\subset \mathcal{A}$, \[ \extop{\mathcal{C}}(f_{\mathcal{B}})= \extop{\mathcal{C}}{(f)} \] 
+	and when  $\mathcal{C}\subset \mathcal{B}$, then 
+	\[ \extop{\mathcal{C}}(f_{\mathcal{B}})=f_{\mathcal{C}}. \]
+	Therefore for any finite $\mathcal{C}$, \[ \extop{\mathcal{C}}(f)=f_{\mathcal{C}}. \]
+	Now let $A\in \mathcal{A}$ and $\mathcal{C}=\sigma(A)$. we obtain that 
+	\[ \ext{\chi_Af}=\ext{\chi_Af_{\mathcal{C}}}= \P{A}\times \nu(A)\P{A}^{-1}=\nu(A) \]
+	and so $f.\mathbb{P}=\nu$ and we are done.
+\end{proof}
+
+Theorem \ref{RNP1} has the following corollaries.
+
+\begin{corollary}
+	If for some $1\leq p\leq \infty$ every $B$-valued martingale bounded in $\lp{p}{B}$ converges a.s., then the same hold for all $1\leq p \leq \infty$.
+\end{corollary}
+
+\begin{corollary}
+	The RNP is separably determined, that is, if every seperable subspace of a Banach space $B$ has the RNP, then $B$ also has it.
+\end{corollary}
+This is easily deduced from the fact that a martingale is a sequence and hence contained in a separable subspace of $B$.
+
+\begin{corollary}
+	Any reflexive Banach space and any separable dual have RNP.
+\end{corollary}
+The proof can be found in \cite{pis}. The proof involves construction of a sequence of martingales which converge in reflexive or separable dual space but do not converge in $\lp{1}{[0,1]}$ and $c_0$. This gives us example of Banach spaces that do not satisfy RNP.
+
+
+
+\begin{thebibliography}{9}
+	\addcontentsline{toc}{chapter}{\numberline{}Bibliography}%
+	\bibitem{pis}
+	Giles Pisier, Martingales in Banach Spaces, \url{https://www.imj-prg.fr/~gilles.pisier/ihp-pisier.pdf}.
+	\bibitem{bon}
+	Yoav Benyamini, 
+	Joram Lindenstrauss, Geometric Nonlinear Functional Analysis: Volume 1, American Mathematical Society, Colloquium Publications
+	Volume: 48 (2000)
+\end{thebibliography}
+\end{document}          
